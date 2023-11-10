@@ -53,6 +53,7 @@ public class LiftTestOneMotor extends LinearOpMode {
 
         MotorLift  = hardwareMap.get(DcMotor.class, "Lift_Motor");
 
+
         waitForStart();
         runtime.reset();
 

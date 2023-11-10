@@ -46,8 +46,8 @@ public class LiftTest extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    private DcMotor MotorLift;
-    private DcMotor MotorTest;
+    private DcMotor MotorLift1;
+    private DcMotor MotorLift2;
 
 
     @Override
@@ -58,14 +58,14 @@ public class LiftTest extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        MotorLift = hardwareMap.get(DcMotor.class, "lift_motor");
-        MotorTest = hardwareMap.get(DcMotor.class, "Motor_Test");
+        MotorLift1 = hardwareMap.get(DcMotor.class, "Motor_Lift_1");
+        MotorLift2 = hardwareMap.get(DcMotor.class, "Motor_Lift_2");
 
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -75,8 +75,8 @@ public class LiftTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             double max;
-            double MotorTestPower = 0;
-            double MotorLiftPower = 0;
+            double MotorLift2Power = 0;
+            double MotorLift1Power = 0;
 
             double axial   = -gamepad1.left_stick_y;
             double lateral =  gamepad1.left_stick_x;
@@ -99,23 +99,23 @@ public class LiftTest extends LinearOpMode {
             }
 
             if(gamepad1.left_bumper) {
-                MotorTestPower = -.5;
+                MotorLift2Power = -.5;
             }else if (gamepad1.right_bumper) {
-                MotorTestPower = .5;
+                MotorLift2Power = .5;
             }
 
             if(gamepad1.left_bumper) {
-                MotorLiftPower = -.5;
+                MotorLift1Power = -.5;
             }else if (gamepad1.right_bumper) {
-                MotorLiftPower = .5;
+                MotorLift1Power = .5;
             }
 
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
-            MotorTest.setPower(MotorTestPower);
-            MotorLift.setPower(MotorLiftPower);
+            MotorLift2.setPower(MotorLift2Power);
+            MotorLift1.setPower(MotorLift1Power);
 
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());

@@ -62,7 +62,6 @@ public class ServoTest extends LinearOpMode {
         while (opModeIsActive()) {
 
             tgtPower = -this.gamepad1.left_stick_x;
-            MotorTest.setPower(tgtPower);
 
             if(gamepad1.y) {
                 servoTest.setPosition(0);
@@ -72,6 +71,7 @@ public class ServoTest extends LinearOpMode {
                 servoTest.setPosition(1);
             }
 
+            MotorTest.setPower(tgtPower);
 
             telemetry.addData("Servo Position", servoTest.getPosition());
             telemetry.addData("TargetPower", tgtPower);
