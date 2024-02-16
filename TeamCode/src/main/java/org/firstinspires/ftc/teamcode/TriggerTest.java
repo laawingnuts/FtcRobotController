@@ -33,64 +33,42 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-
-@TeleOp(name="ServoTest", group="Linear OpMode")
+@TeleOp(name="TriggerTest", group="Linear OpMode")
 @Disabled
-public class ServoTest extends LinearOpMode {
+public class TriggerTest extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor MotorTest;
-    private Servo servoTest;
-    private Servo servoTest2;
+    private DcMotor MotorTest = null;
+
 
     @Override
     public void runOpMode() {
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
 
-        MotorTest = hardwareMap.get(DcMotor.class, "Motor_Test");
-        servoTest = hardwareMap.get(Servo.class, "servo_Test");
-        servoTest2 = hardwareMap.get(Servo.class, "servo_Test_2");
+        MotorTest  = hardwareMap.get(DcMotor.class, "MotorTest");
 
+        MotorTest.setDirection(DcMotor.Direction.REVERSE);
 
-        double tgtPower = 0;
 
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
 
-            tgtPower = -this.gamepad1.left_stick_x;
+            double MotorPower;
+            double speed = gamepad1.right_trigger - gamepad1.left_trigger;
 
-            if(gamepad1.y) {
-                servoTest.setPosition(0);
-            }else if (gamepad1.x || gamepad1.b) {
-                servoTest.setPosition(0.5);
-            }else if (gamepad1.a) {
-                servoTest.setPosition(1);
-            }
+            MotorTest.setPower(speed);
 
-            if(gamepad1.y) {
-                servoTest2.setPosition(0);
-            }else if (gamepad1.x || gamepad1.b) {
-                servoTest2.setPosition(0.5);
-            }else if (gamepad1.a) {
-                servoTest2.setPosition(1);
-            }
 
-            MotorTest.setPower(tgtPower);
-
-            telemetry.addData("Servo Position", servoTest2.getPosition());
-            telemetry.addData("Servo Position", servoTest.getPosition());
-            telemetry.addData("TargetPower", tgtPower);
-            telemetry.addData("Motor Power", MotorTest.getPower());
-            telemetry.addData("Status", "Running");
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", speed);
             telemetry.update();
-
-
         }
     }
 }

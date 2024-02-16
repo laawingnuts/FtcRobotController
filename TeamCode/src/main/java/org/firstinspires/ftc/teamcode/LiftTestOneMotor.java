@@ -41,8 +41,7 @@ import com.qualcomm.robotcore.util.Range;
 //@Disabled
 public class LiftTestOneMotor extends LinearOpMode {
 
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
+        private ElapsedTime runtime = new ElapsedTime();
     private DcMotor MotorLift;
 
 

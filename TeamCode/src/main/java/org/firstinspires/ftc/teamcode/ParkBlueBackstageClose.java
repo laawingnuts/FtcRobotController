@@ -1,4 +1,4 @@
-/* Copyright (c) 2021 FIRST. All rights reserved.
+/* Copyright (c) 2017 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted (subject to the limitations in the disclaimer below) provided that
@@ -29,25 +29,23 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="LiftTest", group="Linear OpMode")
+
+@Autonomous(name="ParkBlueBackstageClose", group="Robot")
 @Disabled
-public class LiftTest extends LinearOpMode {
+public class ParkBlueBackstageClose extends LinearOpMode {
 
-
-    private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    private DcMotor MotorLift1;
-    private DcMotor MotorLift2;
+
+    private ElapsedTime     runtime = new ElapsedTime();
 
 
     @Override
@@ -58,69 +56,62 @@ public class LiftTest extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        MotorLift1 = hardwareMap.get(DcMotor.class, "Motor_Lift_1");
-        MotorLift2 = hardwareMap.get(DcMotor.class, "Motor_Lift_2");
 
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        telemetry.addData("Status", "Initialized");
+
+        telemetry.addData("Status", "Ready to run");
         telemetry.update();
 
+
         waitForStart();
+
+
+        //forward
+        leftFrontDrive.setPower(1);
+        leftBackDrive.setPower(1);
+        rightFrontDrive.setPower(1);
+        rightBackDrive.setPower(1);
         runtime.reset();
-
-        while (opModeIsActive()) {
-            double max;
-            double MotorLift2Power = 0;
-            double MotorLift1Power = 0;
-
-            double axial   = -gamepad1.left_stick_y;
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
-
-            double leftFrontPower  = axial + lateral + yaw;
-            double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower   = axial - lateral + yaw;
-            double rightBackPower  = axial + lateral - yaw;
-
-            max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-            max = Math.max(max, Math.abs(leftBackPower));
-            max = Math.max(max, Math.abs(rightBackPower));
-
-            if (max > 1.0) {
-                leftFrontPower  /= max;
-                rightFrontPower /= max;
-                leftBackPower   /= max;
-                rightBackPower  /= max;
-            }
-
-            if(gamepad1.left_bumper) {
-                MotorLift2Power = -.5;
-            }else if (gamepad1.right_bumper) {
-                MotorLift2Power = .5;
-            }
-
-            if(gamepad1.left_bumper) {
-                MotorLift1Power = -.5;
-            }else if (gamepad1.right_bumper) {
-                MotorLift1Power = .5;
-            }
-
-            leftFrontDrive.setPower(leftFrontPower);
-            rightFrontDrive.setPower(rightFrontPower);
-            leftBackDrive.setPower(leftBackPower);
-            rightBackDrive.setPower(rightBackPower);
-            MotorLift2.setPower(MotorLift2Power);
-            MotorLift1.setPower(MotorLift1Power);
-
-
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+        while (opModeIsActive() && (runtime.seconds() < 0.25)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-    }}
+
+        // Stop
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.10)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        // Strafe Left
+        leftFrontDrive.setPower(-1);
+        leftBackDrive.setPower(1);
+        rightFrontDrive.setPower(-1);
+        rightBackDrive.setPower(1);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        // Step 4:  Stop
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        sleep(1000);
+    }
+}

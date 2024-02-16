@@ -1,4 +1,4 @@
-/* Copyright (c) 2021 FIRST. All rights reserved.
+/* Copyright (c) 2017 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted (subject to the limitations in the disclaimer below) provided that
@@ -29,73 +29,74 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@TeleOp(name="TeleopDrive1", group="Linear OpMode")
-@Disabled
-public class TeleopDrive1 extends LinearOpMode {
+@Autonomous(name="Robot: Auto Drive By Time", group="Robot")
+//@Disabled
+public class RedAllianceParking extends LinearOpMode {
 
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
+    /* Declare OpMode members. */
+    private DcMotor         leftFrontDrive   = null;
+    private DcMotor         rightFrontDrive  = null;
+    private DcMotor         leftbackDrive = null;
+    private DcMotor         rightbackDrive   = null;
 
+    private ElapsedTime     runtime = new ElapsedTime();
+
+    static final double     FORWARD_SPEED = 0.6;
+    static final double     TURN_SPEED    = 0.5;
 
     @Override
     public void runOpMode() {
 
+        // Initialize the drive system variables.
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        leftbackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
+        rightbackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightbackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftbackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        telemetry.addData("Status", "Initialized");
+
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
+
+        leftFrontDrive.setPower(FORWARD_SPEED);
+        rightFrontDrive.setPower(FORWARD_SPEED);
+        rightbackDrive.setPower(FORWARD_SPEED);
+        leftbackDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-
-        while (opModeIsActive()) {
-
-            double vertical = 0;
-            double horizontal = 0;
-            double pivot = 0;
-
-            vertical = -gamepad1.left_stick_y;
-            horizontal = gamepad1.left_stick_x;
-            pivot = gamepad1.right_stick_x;
-
-            rightFrontDrive.setPower(pivot + (-vertical + horizontal));
-            rightBackDrive.setPower(pivot + (-vertical + horizontal));
-            leftFrontDrive.setPower(pivot + (-vertical + horizontal));
-            leftBackDrive.setPower(pivot + (-vertical + horizontal));
-
-            if (gamepad1.a) {
-                leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-                leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-                rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-                rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-            } else if (gamepad1.b) {
-                leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-                leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-                rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-                rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-            }
-
-
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+        while (opModeIsActive() && (runtime.seconds() < 4.5)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-    }}
+
+
+
+        // Step 4:  Stop
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightbackDrive.setPower(0);
+        leftbackDrive.setPower(0);
+
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update ();
+        sleep(1000);
+    }
+}

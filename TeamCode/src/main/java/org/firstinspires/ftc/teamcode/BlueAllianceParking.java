@@ -29,68 +29,65 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
-@TeleOp(name="ServoTest", group="Linear OpMode")
-@Disabled
-public class ServoTest extends LinearOpMode {
+@Autonomous(name="BlueAllianceParking", group="Robot")
+//@Disabled
+public class BlueAllianceParking extends LinearOpMode {
 
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor MotorTest;
-    private Servo servoTest;
-    private Servo servoTest2;
+    private DcMotor         leftDrive   = null;
+    private DcMotor         rightDrive  = null;
+    private DcMotor         backleftDrive = null;
+    private DcMotor         backrightDrive   = null;
+    private ElapsedTime     runtime = new ElapsedTime();
+
+    static final double     FORWARD_SPEED = 0.6;
+    static final double     TURN_SPEED    = 0.5;
 
     @Override
     public void runOpMode() {
 
-        MotorTest = hardwareMap.get(DcMotor.class, "Motor_Test");
-        servoTest = hardwareMap.get(Servo.class, "servo_Test");
-        servoTest2 = hardwareMap.get(Servo.class, "servo_Test_2");
+        leftDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
+        rightDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+        backleftDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
+        backrightDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
 
-        double tgtPower = 0;
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backrightDrive.setDirection(DcMotor.Direction.REVERSE);
+        backleftDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        telemetry.addData("Status", "Ready to run");    //
+        telemetry.update();
 
         waitForStart();
+
+
+        leftDrive.setPower(FORWARD_SPEED);
+        rightDrive.setPower(FORWARD_SPEED);
+        backrightDrive.setPower(-FORWARD_SPEED);
+        backleftDrive.setPower(-FORWARD_SPEED);
         runtime.reset();
-
-        while (opModeIsActive()) {
-
-            tgtPower = -this.gamepad1.left_stick_x;
-
-            if(gamepad1.y) {
-                servoTest.setPosition(0);
-            }else if (gamepad1.x || gamepad1.b) {
-                servoTest.setPosition(0.5);
-            }else if (gamepad1.a) {
-                servoTest.setPosition(1);
-            }
-
-            if(gamepad1.y) {
-                servoTest2.setPosition(0);
-            }else if (gamepad1.x || gamepad1.b) {
-                servoTest2.setPosition(0.5);
-            }else if (gamepad1.a) {
-                servoTest2.setPosition(1);
-            }
-
-            MotorTest.setPower(tgtPower);
-
-            telemetry.addData("Servo Position", servoTest2.getPosition());
-            telemetry.addData("Servo Position", servoTest.getPosition());
-            telemetry.addData("TargetPower", tgtPower);
-            telemetry.addData("Motor Power", MotorTest.getPower());
-            telemetry.addData("Status", "Running");
+        while (opModeIsActive() && (runtime.seconds() < 4.5)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
 
-
         }
+
+        // Step 3:  Stop
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+        backrightDrive.setPower(0);
+        backleftDrive.setPower(0);
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        sleep(1000);
     }
 }
