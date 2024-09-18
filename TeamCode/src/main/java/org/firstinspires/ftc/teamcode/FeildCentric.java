@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//TeleOp Drive with Field Centric controls
+//Field Centric drive test
 
 package org.firstinspires.ftc.teamcode;
 
@@ -36,52 +36,25 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
 @TeleOp
-public class TeleopDrive1 extends LinearOpMode {
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor MotorLift;
-    private DcMotor MotorCollector;
-    private DcMotor MotorHook;
-    private Servo ServoHook1;
-    private Servo ServoHook2;
-    private Servo ServoAirplane;
-    private Servo ServoClamp;
-    private Servo ServoWrist;
-    private Servo ServoElbow;
-    enum MotorCollectorState  {
-        forward, backward, off;
-    };
+@Disabled
+public class FeildCentric extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-
         DcMotor leftFrontDrive = hardwareMap.dcMotor.get("left_front_drive");
         DcMotor leftBackDrive = hardwareMap.dcMotor.get("left_back_drive");
         DcMotor rightFrontDrive = hardwareMap.dcMotor.get("right_front_drive");
         DcMotor rightBackDrive = hardwareMap.dcMotor.get("right_back_drive");
 
-        MotorLift = hardwareMap.get(DcMotor.class, "Motor_Lift");
-        MotorCollector = hardwareMap.get(DcMotor.class, "Motor_Collector");
-        MotorHook = hardwareMap.get(DcMotor.class, "Motor_Hook");
-        ServoHook1 = hardwareMap.get(Servo.class,"Servo_Hook_1");
-        ServoHook2 = hardwareMap.get(Servo.class,"Servo_Hook_2");
-        ServoAirplane = hardwareMap.get(Servo.class, "Servo_Airplane");
-        ServoClamp = hardwareMap.get(Servo.class, "Servo_Clamp");
-        ServoWrist = hardwareMap.get(Servo.class, "Servo_Wrist");
-        ServoElbow = hardwareMap.get(Servo.class, "Servo_Elbow");
-
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        MotorCollectorState motorCollectorState = MotorCollectorState.off;
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -114,90 +87,6 @@ public class TeleopDrive1 extends LinearOpMode {
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
-
-            //Lift
-            double lift = gamepad2.right_stick_y - gamepad2.left_stick_y;
-
-            //Collector
-            if(gamepad1.left_bumper) {
-                motorCollectorState = MotorCollectorState.forward;
-
-            }else if (gamepad1.right_bumper) {
-                motorCollectorState = MotorCollectorState.backward;
-            } else if (gamepad1.x) {
-                motorCollectorState = MotorCollectorState.off;
-            }
-
-            if (motorCollectorState == MotorCollectorState.backward) {
-                MotorCollector.setPower(-.4);
-            }
-            else if (motorCollectorState == MotorCollectorState.forward){
-                MotorCollector.setPower(.4);
-            }
-            else {
-                MotorCollector.setPower(0);
-            }
-
-            //Hook
-            double MotorHookPower = 0;
-            double hookspeed = gamepad2.left_trigger - gamepad2.right_trigger;
-
-            if(gamepad2.dpad_up) {
-                ServoHook1.setPosition(0);
-                ServoHook2.setPosition(1);
-            } else if (gamepad2.dpad_down) {
-                ServoHook1.setPosition(0.3);
-                ServoHook2.setPosition(0.7);
-            }
-
-            //Airplane
-            if(gamepad1.dpad_up) {
-                ServoAirplane.setPosition(0.2);
-            }else if (gamepad1.dpad_down) {
-                ServoAirplane.setPosition(1);
-            }
-
-            //Lift and Grabber
-
-            //wrist and elbow
-            //Servo for grabber
-            if(gamepad2.left_bumper) { // open
-                ServoClamp.setPosition(0.5);
-            }else if (gamepad2.right_bumper) { // closed
-                ServoClamp.setPosition(0.1);
-            }
-
-            //down position
-            if (gamepad2.a)
-            {
-                ServoWrist.setPosition(0.02);
-                ServoElbow.setPosition(0.08);
-
-            }
-
-            //Travel position
-            if(gamepad2.b) {
-                ServoWrist.setPosition(0.22);
-                ServoElbow.setPosition(0.14);
-
-            }
-
-            //Ready Position
-            if(gamepad2.x) {
-                ServoWrist.setPosition(0.33);
-                ServoElbow.setPosition(0.3);
-            }
-
-
-            //Up position
-            else if (gamepad2.y) {
-                ServoWrist.setPosition(0.15);
-                ServoElbow.setPosition(0.3);
-            }
-
-            MotorLift.setPower(lift);
-            MotorHook.setPower(hookspeed);
-            MotorHook.setPower(MotorHookPower);
 
             leftFrontDrive.setPower(frontLeftPower);
             leftBackDrive.setPower(backLeftPower);

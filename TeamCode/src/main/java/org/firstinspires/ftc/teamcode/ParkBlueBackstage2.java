@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="ParkBlueBackstage2", group="Robot")
-@Disabled
+//@Disabled
 public class ParkBlueBackstage2 extends LinearOpMode {
 
 
@@ -47,6 +47,89 @@ public class ParkBlueBackstage2 extends LinearOpMode {
     private DcMotor rightBackDrive = null;
 
     private ElapsedTime     runtime = new ElapsedTime();
+
+    private void forward(double secondsToRun) {
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void stop(double secondsToRun) {
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void strafeLeft(double secondsToRun) {
+        leftFrontDrive.setPower(-0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(-0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void strafeRight(double secondsToRun) {
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(-0.5);
+        rightFrontDrive.setPower(-0.5);
+        rightBackDrive.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void turnRight(double secondsToRun) {
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(-0.5);
+        rightBackDrive.setPower(-0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void diagonalRight(double secondsToRun) {
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+    private void turnLeft(double secondsToRun) {
+        leftFrontDrive.setPower(-0.5);
+        leftBackDrive.setPower(-0.5);
+        rightFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
 
 
     @Override
@@ -71,85 +154,12 @@ public class ParkBlueBackstage2 extends LinearOpMode {
 
         waitForStart();
 
-        //Forward
-        leftFrontDrive.setPower(1);
-        leftBackDrive.setPower(1);
-        rightFrontDrive.setPower(1);
-        rightBackDrive.setPower(1);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.25)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Stop
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.10)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Strafe right
-        leftFrontDrive.setPower(1);
-        leftBackDrive.setPower(-1);
-        rightFrontDrive.setPower(1);
-        rightBackDrive.setPower(-1);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Stop
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.10)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        //Forward
-        leftFrontDrive.setPower(1);
-        leftBackDrive.setPower(1);
-        rightFrontDrive.setPower(1);
-        rightBackDrive.setPower(1);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-
-        // Stop
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.10)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Strafe left
-        leftFrontDrive.setPower(-1);
-        leftBackDrive.setPower(1);
-        rightFrontDrive.setPower(-1);
-        rightBackDrive.setPower(1);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 5.0)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Step 4:  Stop
+        diagonalRight(3);
+        forward(0.5);
+        turnLeft(0.6);
+        forward(5);
+        stop(1);
+        strafeLeft(5.5);
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);

@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="ParkBlueBackstageClose", group="Robot")
-@Disabled
+//@Disabled
 public class ParkBlueBackstageClose extends LinearOpMode {
 
     private DcMotor leftFrontDrive = null;
@@ -46,6 +46,54 @@ public class ParkBlueBackstageClose extends LinearOpMode {
     private DcMotor rightBackDrive = null;
 
     private ElapsedTime     runtime = new ElapsedTime();
+
+    private void forward(double secondsToRun) {
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void stop(double secondsToRun) {
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void strafeLeft(double secondsToRun) {
+        leftFrontDrive.setPower(-0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(-0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void turnRight(double secondsToRun) {
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(-0.5);
+        rightBackDrive.setPower(-0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
 
 
     @Override

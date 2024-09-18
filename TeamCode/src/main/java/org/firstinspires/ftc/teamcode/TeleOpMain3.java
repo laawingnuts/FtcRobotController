@@ -29,18 +29,15 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="TeleopMain", group="Linear OpMode")
-@Disabled
-public class TeleopMain extends LinearOpMode {
+@TeleOp(name="TeleopMain3", group="Linear OpMode")
+//@Disabled
+public class TeleOpMain3 extends LinearOpMode {
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -51,17 +48,12 @@ public class TeleopMain extends LinearOpMode {
     private DcMotor MotorLift;
     private DcMotor MotorCollector;
     private DcMotor MotorHook;
-    private Servo ServoHook;
+    private Servo ServoHook1;
+    private Servo ServoHook2;
     private Servo ServoAirplane;
     private Servo ServoClamp;
     private Servo ServoWrist;
     private Servo ServoElbow;
-
-    static final double     COUNTS_PER_MOTOR_REV    = 223 ;
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;
-    static final double     WHEEL_DIAMETER_INCHES   = 3.5 ;
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
 
 
 
@@ -82,7 +74,8 @@ public class TeleopMain extends LinearOpMode {
         MotorLift = hardwareMap.get(DcMotor.class, "Motor_Lift");
         MotorCollector = hardwareMap.get(DcMotor.class, "Motor_Collector");
         MotorHook = hardwareMap.get(DcMotor.class, "Motor_Hook");
-        ServoHook = hardwareMap.get(Servo.class,"Servo_Hook");
+        ServoHook1 = hardwareMap.get(Servo.class,"Servo_Hook_1");
+        ServoHook2 = hardwareMap.get(Servo.class,"Servo_Hook_2");
         ServoAirplane = hardwareMap.get(Servo.class, "Servo_Airplane");
         ServoClamp = hardwareMap.get(Servo.class, "Servo_Clamp");
         ServoWrist = hardwareMap.get(Servo.class, "Servo_Wrist");
@@ -133,6 +126,18 @@ public class TeleopMain extends LinearOpMode {
                 rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
             }
 
+            if (gamepad1.a) {
+                leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+                leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+                rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+                rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            } else if (gamepad1.b) {
+                leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+                leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+                rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+                rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+            }
+
             //Buttons Used:
             // Gamepad1- leftstick, rightstick, right trigger, left trigger, dpad up, dpad down, x, a, b
             // Gamepad2- rightstick, left trigger, right trigger, left bumper, right bumper, x, y, a, b
@@ -151,10 +156,10 @@ public class TeleopMain extends LinearOpMode {
             }
 
             if (motorCollectorState == MotorCollectorState.backward) {
-                MotorCollector.setPower(-1);
+                MotorCollector.setPower(-.4);
             }
             else if (motorCollectorState == MotorCollectorState.forward){
-                MotorCollector.setPower(1);
+                MotorCollector.setPower(.4);
             }
             else {
                 MotorCollector.setPower(0);
@@ -165,10 +170,11 @@ public class TeleopMain extends LinearOpMode {
             double hookspeed = gamepad2.left_trigger - gamepad2.right_trigger;
 
             if(gamepad2.dpad_up) {
-                ServoHook.setPosition(-0.5);
+                ServoHook1.setPosition(0);
+                ServoHook2.setPosition(1);
             } else if (gamepad2.dpad_down) {
-                ServoHook.setPosition(0.35);
-
+                ServoHook1.setPosition(0.3);
+                ServoHook2.setPosition(0.7);
             }
 
             //Airplane
@@ -192,55 +198,35 @@ public class TeleopMain extends LinearOpMode {
             {
                 ServoWrist.setPosition(0.23);
                 ServoElbow.setPosition(0.15);
+
             }
 
             //Travel position
             if(gamepad2.b) {
-                //ServoWrist.setPosition(0.27);
-                //ServoElbow.setPosition(0.18);
-                sleep(2000);
-                encoderDrive(0.6,  5,  5, 5.0);
-                sleep(1000);
+                ServoWrist.setPosition(0.27);
+                ServoElbow.setPosition(0.18);
 
             }
 
             //Ready Position
-            //if(gamepad2.x) {
-                //ServoWrist.setPosition(0.4);
-                //ServoElbow.setPosition(0.4);
-            //}
-
-            if(gamepad2.x)  {
-
-                switch (v_state){
-
-                    case 0:
-
-                        ServoWrist.setPosition(0.27);
-                        ServoElbow.setPosition(0.18);
-                        mStateTime.reset();
-                        v_state++;
-                        break;
-                    case 1:
-                        if (mStateTime.time() >= 0.5) {
-                            ServoWrist.setPosition(0.4);
-                            ServoElbow.setPosition(0.4);
-                            v_state++;
-                        }
-                }
+            if(gamepad2.x) {
+                ServoWrist.setPosition(0.4);
+                ServoElbow.setPosition(0.4);
             }
 
 
             //Up position
             else if (gamepad2.y) {
-                ServoWrist.setPosition(-0.1);
-                ServoElbow.setPosition(0.15);
+                ServoWrist.setPosition(0.15);
+                ServoElbow.setPosition(0.3);
             }
+
 
             leftFrontDrive.setPower(frontLeftPower);
             leftBackDrive.setPower(backLeftPower);
             rightFrontDrive.setPower(frontRightPower);
             rightBackDrive.setPower(backRightPower);
+
 
             MotorLift.setPower(lift);
             MotorHook.setPower(hookspeed);
@@ -251,44 +237,4 @@ public class TeleopMain extends LinearOpMode {
         }
     }
 
-    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
-        int newMotorLiftTarget;
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newMotorLiftTarget = MotorLift.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-
-            MotorLift.setTargetPosition(newMotorLiftTarget);
-
-
-            // Turn On RUN_TO_POSITION
-            MotorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            MotorLift.setPower(Math.abs(speed));
-
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (MotorLift.isBusy())) {
-
-            }
-
-            // Stop all motion;
-            MotorLift.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            MotorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            sleep(250);   // optional pause after each move.
-        }
-    }
 }

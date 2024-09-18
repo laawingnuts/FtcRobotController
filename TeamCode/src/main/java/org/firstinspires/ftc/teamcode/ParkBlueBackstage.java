@@ -49,9 +49,58 @@ public class ParkBlueBackstage extends LinearOpMode {
 
     private ElapsedTime     runtime = new ElapsedTime();
 
+    private void forward(double secondsToRun) {
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void stop(double secondsToRun) {
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void strafeLeft(double secondsToRun) {
+        leftFrontDrive.setPower(-0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(0.5);
+        rightBackDrive.setPower(-0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
+
+    private void turnRight(double secondsToRun) {
+        leftFrontDrive.setPower(0.5);
+        leftBackDrive.setPower(0.5);
+        rightFrontDrive.setPower(-0.5);
+        rightBackDrive.setPower(-0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < secondsToRun)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+    }
 
     @Override
     public void runOpMode() {
+
+
 
 
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
@@ -71,41 +120,11 @@ public class ParkBlueBackstage extends LinearOpMode {
 
 
         waitForStart();
-
-        //forward
-        leftFrontDrive.setPower(1);
-        leftBackDrive.setPower(1);
-        rightFrontDrive.setPower(1);
-        rightBackDrive.setPower(1);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.25)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Stop
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.10)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Strafe Left
-        leftFrontDrive.setPower(-1);
-        leftBackDrive.setPower(1);
-        rightFrontDrive.setPower(-1);
-        rightBackDrive.setPower(1);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 4.0)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Step 4:  Stop
+        stop(1);
+        turnRight(0.05);
+        forward(0.1);
+        stop(1);
+        strafeLeft(4.5);
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
