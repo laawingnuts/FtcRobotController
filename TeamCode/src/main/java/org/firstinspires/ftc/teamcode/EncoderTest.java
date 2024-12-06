@@ -25,6 +25,8 @@ public class EncoderTest extends LinearOpMode {
     public void runOpMode() {
 
         liftMotor  = hardwareMap.get(DcMotor.class, "lift_Motor");
+
+        liftMotor.setTargetPosition(targetPosition);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
