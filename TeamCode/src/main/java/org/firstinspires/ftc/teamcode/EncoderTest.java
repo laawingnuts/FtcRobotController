@@ -24,6 +24,7 @@ public class EncoderTest extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+
         liftMotor  = hardwareMap.get(DcMotor.class, "lift_Motor");
 
         liftMotor.setTargetPosition(targetPosition);
@@ -33,13 +34,14 @@ public class EncoderTest extends LinearOpMode {
 
         targetPosition = liftMotor.getCurrentPosition();
 
+
         waitForStart();
 
         while (opModeIsActive()) {
 
             if (gamepad1.a && !buttonPressed) {
                 buttonPressed = true;
-                targetPosition += 500;
+                targetPosition += 560;
                 liftMotor.setTargetPosition(targetPosition);
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 liftMotor.setPower(0.5);
