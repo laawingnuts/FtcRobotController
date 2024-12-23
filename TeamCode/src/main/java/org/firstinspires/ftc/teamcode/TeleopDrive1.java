@@ -35,6 +35,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -55,6 +56,7 @@ public class TeleopDrive1 extends LinearOpMode {
     private Servo ServoClamp;
     private Servo ServoWrist;
     private Servo ServoElbow;
+    private CRServo TestServo;
     enum MotorCollectorState  {
         forward, backward, off;
     };
@@ -75,6 +77,7 @@ public class TeleopDrive1 extends LinearOpMode {
         ServoClamp = hardwareMap.get(Servo.class, "Servo_Clamp");
         ServoWrist = hardwareMap.get(Servo.class, "Servo_Wrist");
         ServoElbow = hardwareMap.get(Servo.class, "Servo_Elbow");
+        TestServo = hardwareMap.get(CRServo.class, "Test_Servo");
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -193,6 +196,14 @@ public class TeleopDrive1 extends LinearOpMode {
             else if (gamepad2.y) {
                 ServoWrist.setPosition(0.15);
                 ServoElbow.setPosition(0.3);
+            }
+
+            if (gamepad1.a) {
+                TestServo.setPower(1);
+            } else if (gamepad1.b) {
+                TestServo.setPower(-1);
+            } else if (gamepad1.x) {
+                TestServo.setPower(0);
             }
 
             MotorLift.setPower(lift);

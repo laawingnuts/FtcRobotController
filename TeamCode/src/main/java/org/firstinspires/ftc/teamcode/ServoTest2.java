@@ -29,27 +29,30 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="MotorTest", group="Linear OpMode")
+/* Values for the servo test in relation to programming:
+* left = 0
+* middle = 0.5
+* Right = 1 */
 
-public class MotorTest extends LinearOpMode {
-
+@TeleOp(name="ServoTest2", group="Linear OpMode")
+//@Disabled
+public class ServoTest2 extends LinearOpMode {
+    
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor MotorTest = null;
-
+    private Servo TestServo;
+    private Servo TestServo2;
 
     @Override
     public void runOpMode() {
 
-
-        MotorTest  = hardwareMap.get(DcMotor.class, "Test_Motor");
-
-        MotorTest.setDirection(DcMotor.Direction.REVERSE);
+        TestServo = hardwareMap.get(Servo.class, "Test_Servo");
+        TestServo2 = hardwareMap.get(Servo.class, "Test_Servo2");
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -59,12 +62,18 @@ public class MotorTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            double test = gamepad1.right_stick_y - gamepad1.left_stick_y;
+            if (gamepad1.a) {
+                TestServo.setPosition(0.5);
+                TestServo2.setPosition(0.5);
+            } else if (gamepad1.b) {
+                TestServo.setPosition(0.35);
+                TestServo2.setPosition(0.65);
+            } else if (gamepad1.x) {
+                TestServo.setPosition(1);
+                TestServo2.setPosition(1);
+            }
 
-            MotorTest.setPower(test);
 
-
-            // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
         }
